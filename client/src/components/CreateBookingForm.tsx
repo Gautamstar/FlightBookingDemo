@@ -1,10 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { ApiError, createBooking } from "../api";
-import type { CreateBookingRequest } from "../types";
+import type { Booking, CreateBookingRequest } from "../types";
+import { ButtonLabel } from "./Ui";
 
 interface Props {
   token: string;
-  onCreated: () => void;
+  onCreated: (booking: Booking) => void;
 }
 
 const empty: CreateBookingRequest = {
@@ -33,9 +34,9 @@ export function CreateBookingForm({ token, onCreated }: Props) {
     setError(null);
     setFieldErrors({});
     try {
-      await createBooking(token, form);
+      const created = await createBooking(token, form);
       setForm(empty);
-      onCreated();
+      onCreated(created);
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
@@ -52,73 +53,93 @@ export function CreateBookingForm({ token, onCreated }: Props) {
   const errorFor = (field: string) =>
     Object.entries(fieldErrors).find(([key]) => key.toLowerCase() === field.toLowerCase())?.[1]?.[0];
 
+  // Field-level errors show under their field; anything else (a 409 duplicate, a 503) shows as a notice.
+  const hasFieldErrors = Object.keys(fieldErrors).length > 0;
+
+  const field = (name: keyof CreateBookingRequest, label: string, input: React.ReactNode, className = "") => (
+    <label className={`field ${className}${errorFor(name) ? " has-error" : ""}`}>
+      <span className="field-label">{label}</span>
+      {input}
+      {errorFor(name) && <small className="field-error">{errorFor(name)}</small>}
+    </label>
+  );
+
   return (
-    <form className="card" onSubmit={handleSubmit}>
-      <h2>New booking</h2>
-      <div className="grid">
-        <label>
-          Passenger
-          <input value={form.passengerName} onChange={(e) => update("passengerName", e.target.value)} required />
-          <small className="error">{errorFor("passengerName")}</small>
-        </label>
-        <label>
-          Flight
+    <form className="panel issue" onSubmit={handleSubmit}>
+      <div className="issue-grid">
+        {field(
+          "passengerName",
+          "Passenger name",
           <input
+            value={form.passengerName}
+            placeholder="As on passport"
+            onChange={(e) => update("passengerName", e.target.value)}
+            required
+          />,
+          "wide",
+        )}
+        {field(
+          "flightNumber",
+          "Flight",
+          <input
+            className="code"
             value={form.flightNumber}
             placeholder="AC25"
             onChange={(e) => update("flightNumber", e.target.value.toUpperCase())}
             required
-          />
-          <small className="error">{errorFor("flightNumber")}</small>
-        </label>
-        <label>
-          From
+          />,
+        )}
+        {field(
+          "origin",
+          "From",
           <input
+            className="code"
             value={form.origin}
             placeholder="YYZ"
             maxLength={3}
             onChange={(e) => update("origin", e.target.value.toUpperCase())}
             required
-          />
-          <small className="error">{errorFor("origin")}</small>
-        </label>
-        <label>
-          To
+          />,
+        )}
+        {field(
+          "destination",
+          "To",
           <input
+            className="code"
             value={form.destination}
             placeholder="PVG"
             maxLength={3}
             onChange={(e) => update("destination", e.target.value.toUpperCase())}
             required
-          />
-          <small className="error">{errorFor("destination")}</small>
-        </label>
-        <label>
-          Departure
+          />,
+        )}
+        {field(
+          "departureDate",
+          "Departure",
+          <input type="date" value={form.departureDate} onChange={(e) => update("departureDate", e.target.value)} required />,
+        )}
+        {field(
+          "fareCad",
+          "Fare (CAD)",
           <input
-            type="date"
-            value={form.departureDate}
-            onChange={(e) => update("departureDate", e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Fare (CAD)
-          <input
+            className="num"
             type="number"
             min="0.01"
             step="0.01"
             value={form.fareCad || ""}
             onChange={(e) => update("fareCad", Number(e.target.value))}
             required
-          />
-          <small className="error">{errorFor("fareCad")}</small>
-        </label>
+          />,
+        )}
+        <button type="submit" className="btn-primary issue-submit" disabled={busy}>
+          <ButtonLabel>{busy ? "Saving…" : "Create booking"}</ButtonLabel>
+        </button>
       </div>
-      {error && <p className="error">{error}</p>}
-      <button type="submit" disabled={busy}>
-        {busy ? "Saving..." : "Create booking"}
-      </button>
+      {error && !hasFieldErrors && (
+        <p className="notice" role="alert">
+          {error}
+        </p>
+      )}
     </form>
   );
 }

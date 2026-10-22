@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { login } from "../api";
 import type { Session } from "../types";
+import { ButtonLabel } from "./Ui";
 
 interface Props {
   onLogin: (session: Session) => void;
@@ -26,27 +27,37 @@ export function LoginForm({ onLogin }: Props) {
   }
 
   return (
-    <form className="card login" onSubmit={handleSubmit}>
-      <h2>Sign in</h2>
-      <label>
-        Username
-        <input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required />
-      </label>
-      <label>
-        Password
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-        />
-      </label>
-      {error && <p className="error">{error}</p>}
-      <button type="submit" disabled={busy}>
-        {busy ? "Signing in..." : "Sign in"}
-      </button>
-      <p className="hint">Demo users are in appsettings.Development.json.</p>
-    </form>
+    <section className="band band-grey signin">
+      <h1 className="band-title">Agent sign in</h1>
+      <p className="band-lead">Book, confirm and ticket flights for your customers.</p>
+      <form className="panel signin-panel" onSubmit={handleSubmit}>
+        <label className="field">
+          <span className="field-label">Username</span>
+          <input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required />
+        </label>
+        <label className="field">
+          <span className="field-label">Password</span>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+        </label>
+        {error && (
+          <p className="notice" role="alert">
+            {error}
+          </p>
+        )}
+        <button type="submit" className="btn-primary" disabled={busy}>
+          <ButtonLabel>{busy ? "Signing in…" : "Sign in"}</ButtonLabel>
+        </button>
+        <p className="hint">
+          Demo logins for <code>agent</code> and <code>admin</code> are in <code>appsettings.Local.json</code>, and{" "}
+          <code>start-demo.ps1</code> prints them.
+        </p>
+      </form>
+    </section>
   );
 }

@@ -55,6 +55,26 @@ export interface SearchFilters {
   pageSize: number;
 }
 
+// Rows from the view dbo.vw_RouteSummary.
+export interface RouteSummary {
+  origin: string;
+  destination: string;
+  departureDate: string;
+  activeBookings: number;
+  ticketedBookings: number;
+  revenueCad: number;
+}
+
+// Rows the trigger trg_Bookings_StatusHistory writes on every insert and status change.
+export interface StatusChange {
+  id: number;
+  bookingId: number;
+  oldStatus: BookingStatus | null;
+  newStatus: BookingStatus;
+  changedAt: string;
+  changedBy: string;
+}
+
 export interface Session {
   token: string;
   username: string;

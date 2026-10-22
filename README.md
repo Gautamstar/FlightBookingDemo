@@ -24,13 +24,17 @@ Errors use the standard `ProblemDetails` JSON format (RFC 9110).
 
 ## Screenshots
 
-Agent view, with one fare converted to CNY through the live exchange-rate API:
+Agent view, with one fare converted to CNY through the live exchange-rate API and a booking's status history (written by the SQL Server trigger) open on the right:
 
 ![Bookings, agent view](docs/screenshots/bookings-agent.png)
 
 Admins also see **ticket** on Confirmed bookings (the API enforces the same rule with a 403 for agents):
 
 ![Bookings, admin view](docs/screenshots/bookings-admin.png)
+
+Operations, where each report names the T-SQL object behind it (a view, a table-valued function and an admin-only stored procedure):
+
+![Operations reports](docs/screenshots/operations.png)
 
 A duplicate active booking is rejected with the API's 409 message:
 

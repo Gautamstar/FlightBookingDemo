@@ -492,3 +492,4 @@ appsettings.Local.json
 !client/README.md
 study-guide/
 *.pdf
+.impeccable/

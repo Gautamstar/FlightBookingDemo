@@ -3,8 +3,10 @@ import type {
   CreateBookingRequest,
   FareQuote,
   PagedResult,
+  RouteSummary,
   SearchFilters,
   Session,
+  StatusChange,
   TokenResponse,
 } from "./types";
 
@@ -93,4 +95,23 @@ export function changeStatus(token: string, id: number, action: StatusAction): P
 
 export function getFare(token: string, id: number, currency: string): Promise<FareQuote> {
   return request(`/api/bookings/${id}/fare?currency=${encodeURIComponent(currency)}`, token);
+}
+
+// Operations: each call is backed by a T-SQL object in SQL Server.
+
+export function getRouteSummary(token: string, from: string, to: string): Promise<RouteSummary[]> {
+  const params = new URLSearchParams({ from, to });
+  return request(`/api/operations/route-summary?${params}`, token);
+}
+
+export function getUnticketed(token: string, days: number): Promise<Booking[]> {
+  return request(`/api/operations/unticketed?days=${days}`, token);
+}
+
+export function expireUnpaid(token: string, olderThanHours: number): Promise<{ expiredCount: number }> {
+  return request(`/api/operations/expire-unpaid?olderThanHours=${olderThanHours}`, token, { method: "POST" });
+}
+
+export function getHistory(token: string, id: number): Promise<StatusChange[]> {
+  return request(`/api/operations/bookings/${id}/history`, token);
 }

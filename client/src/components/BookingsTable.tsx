@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { changeStatus, getFare, type StatusAction } from "../api";
 import type { Booking, FareQuote } from "../types";
+import { money, shortDate } from "../format";
+import { Icon, Route, StatusTag } from "./Ui";
 
 interface Props {
   token: string;
   isAdmin: boolean;
   bookings: Booking[];
-  onChanged: () => void;
+  currency: string;
+  selectedId: number | null;
+  pressedId: number | null;
+  onSelect: (id: number) => void;
+  onChanged: (id: number) => void;
   onError: (message: string) => void;
 }
-
-const CURRENCIES = ["CNY", "HKD", "TWD", "JPY", "KRW", "USD"];
 
 // Which buttons make sense for each status. This mirrors the API's state machine for the UI;
 // the API still enforces the real rules.
@@ -21,11 +25,19 @@ const ACTIONS: Record<Booking["status"], StatusAction[]> = {
   Cancelled: [],
 };
 
-const money = (amount: number, currency: string) =>
-  new Intl.NumberFormat("en-CA", { style: "currency", currency }).format(amount);
+const LABELS: Record<StatusAction, string> = { confirm: "Confirm", ticket: "Ticket", cancel: "Cancel" };
 
-export function BookingsTable({ token, isAdmin, bookings, onChanged, onError }: Props) {
-  const [currency, setCurrency] = useState("CNY");
+export function BookingsTable({
+  token,
+  isAdmin,
+  bookings,
+  currency,
+  selectedId,
+  pressedId,
+  onSelect,
+  onChanged,
+  onError,
+}: Props) {
   const [quotes, setQuotes] = useState<Record<number, FareQuote>>({});
   const [busyId, setBusyId] = useState<number | null>(null);
 
@@ -33,7 +45,7 @@ export function BookingsTable({ token, isAdmin, bookings, onChanged, onError }: 
     setBusyId(id);
     try {
       await changeStatus(token, id, action);
-      onChanged();
+      onChanged(id);
     } catch (err) {
       onError(err instanceof Error ? err.message : "Action failed.");
     } finally {
@@ -54,70 +66,99 @@ export function BookingsTable({ token, isAdmin, bookings, onChanged, onError }: 
   }
 
   if (bookings.length === 0) {
-    return <p className="hint">No bookings match these filters.</p>;
+    return <p className="empty">No bookings match these filters. Clear a filter or create one above.</p>;
   }
 
   return (
-    <div className="table-wrap">
-      <label className="inline">
-        Convert fares to
-        <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-          {CURRENCIES.map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
-      </label>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Passenger</th>
-            <th>Flight</th>
-            <th>Route</th>
-            <th>Departs</th>
-            <th>Fare</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bookings.map((b) => (
+    <table className="register">
+      <thead>
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">Passenger</th>
+          <th scope="col">Route</th>
+          <th scope="col">Flight</th>
+          <th scope="col">Departs</th>
+          <th scope="col" className="num">
+            Fare
+          </th>
+          <th scope="col">Status</th>
+          <th scope="col">
+            <span className="visually-hidden">Actions</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {bookings.map((b) => {
+          const quote = quotes[b.id]?.currency === currency ? quotes[b.id] : undefined;
+          return (
             // key lets React match rows between renders, so it only updates the rows that changed
-            <tr key={b.id}>
-              <td>{b.id}</td>
-              <td>{b.passengerName}</td>
-              <td>{b.flightNumber}</td>
-              <td>
-                {b.origin} → {b.destination}
+            <tr
+              key={b.id}
+              className={`${b.status === "Cancelled" ? "is-void" : ""}${selectedId === b.id ? " is-selected" : ""}`}
+              onClick={() => onSelect(b.id)}
+            >
+              <td className="mono dim" data-label="No.">
+                #{b.id}
               </td>
-              <td>{b.departureDate}</td>
-              <td>
+              <td data-label="Passenger">
+                <button
+                  type="button"
+                  className="row-open"
+                  aria-pressed={selectedId === b.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect(b.id);
+                  }}
+                >
+                  {b.passengerName}
+                </button>
+              </td>
+              <td data-label="Route">
+                <Route from={b.origin} to={b.destination} />
+                <span className="route-flight">{b.flightNumber}</span>
+              </td>
+              <td className="mono" data-label="Flight">
+                {b.flightNumber}
+              </td>
+              <td className="date" data-label="Departs">
+                {shortDate(b.departureDate)}
+              </td>
+              <td className="num" data-label="Fare">
                 {money(b.fareCad, "CAD")}
-                {quotes[b.id] && (
-                  <div className="hint">
-                    ≈ {money(quotes[b.id].convertedFare, quotes[b.id].currency)}
-                  </div>
-                )}
+                {quote && <span className="converted">≈ {money(quote.convertedFare, quote.currency)}</span>}
               </td>
-              <td>
-                <span className={`status ${b.status.toLowerCase()}`}>{b.status}</span>
+              <td data-label="Status">
+                <StatusTag status={b.status} fresh={pressedId === b.id} />
               </td>
-              <td className="actions">
+              <td className="actions" onClick={(e) => e.stopPropagation()}>
                 {ACTIONS[b.status]
                   .filter((a) => a !== "ticket" || isAdmin) // agents never see a button the API would refuse
                   .map((a) => (
-                    <button key={a} className={a} disabled={busyId === b.id} onClick={() => runAction(b.id, a)}>
-                      {a}
+                    <button
+                      key={a}
+                      type="button"
+                      className={a === "cancel" ? "quiet danger" : "outline"}
+                      disabled={busyId === b.id}
+                      onClick={() => runAction(b.id, a)}
+                    >
+                      {LABELS[a]}
                     </button>
                   ))}
-                <button className="secondary" disabled={busyId === b.id} onClick={() => convert(b.id)}>
+                <button
+                  type="button"
+                  className="quiet"
+                  disabled={busyId === b.id}
+                  onClick={() => convert(b.id)}
+                  title={`Convert this fare to ${currency} with the live rates API`}
+                >
+                  <Icon name="convert" />
                   {currency}
                 </button>
               </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
