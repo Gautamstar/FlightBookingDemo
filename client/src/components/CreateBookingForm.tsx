@@ -107,7 +107,7 @@ export function CreateBookingForm({ token, onCreated }: Props) {
           <input
             className="code"
             value={form.destination}
-            placeholder="PVG"
+            placeholder="YVR"
             maxLength={3}
             onChange={(e) => update("destination", e.target.value.toUpperCase())}
             required

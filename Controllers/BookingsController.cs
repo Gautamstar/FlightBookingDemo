@@ -27,7 +27,7 @@ public class BookingsController : ControllerBase
         return Ok(await _service.GetAllAsync());
     }
 
-    // GET api/bookings/search?origin=YYZ&destination=PVG&date=2026-11-15&page=1&pageSize=20
+    // GET api/bookings/search?origin=YYZ&destination=YVR&date=2026-11-15&page=1&pageSize=20
     [HttpGet("search")]
     public async Task<ActionResult<PagedResult<Booking>>> Search([FromQuery] BookingSearchQuery query, CancellationToken ct)
     {
@@ -78,14 +78,14 @@ public class BookingsController : ControllerBase
     [HttpPut("{id:int}/cancel")]
     public Task<ActionResult<Booking>> Cancel(int id) => ChangeStatus(id, BookingStatus.Cancelled);
 
-    // GET api/bookings/5/fare?currency=CNY
+    // GET api/bookings/5/fare?currency=USD
     // CancellationToken is filled in by ASP.NET Core and fires if the client disconnects.
     [HttpGet("{id:int}/fare")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async Task<ActionResult<FareQuote>> GetFare(
         int id,
-        [FromQuery, Required, RegularExpression("^[A-Z]{3}$", ErrorMessage = "Use a 3-letter ISO currency code like CNY.")]
+        [FromQuery, Required, RegularExpression("^[A-Z]{3}$", ErrorMessage = "Use a 3-letter ISO currency code like USD.")]
         string currency,
         CancellationToken ct)
     {

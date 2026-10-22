@@ -1,7 +1,6 @@
 import type {
   Booking,
   CreateBookingRequest,
-  FareQuote,
   PagedResult,
   RouteSummary,
   SearchFilters,
@@ -91,10 +90,6 @@ export type StatusAction = "confirm" | "ticket" | "cancel";
 
 export function changeStatus(token: string, id: number, action: StatusAction): Promise<Booking> {
   return request(`/api/bookings/${id}/${action}`, token, { method: "PUT" });
-}
-
-export function getFare(token: string, id: number, currency: string): Promise<FareQuote> {
-  return request(`/api/bookings/${id}/fare?currency=${encodeURIComponent(currency)}`, token);
 }
 
 // Operations: each call is backed by a T-SQL object in SQL Server.

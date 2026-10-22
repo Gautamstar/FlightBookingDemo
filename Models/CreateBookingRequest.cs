@@ -16,7 +16,7 @@ public record CreateBookingRequest(
     [Required, RegularExpression("^[A-Z]{3}$", ErrorMessage = "Use a 3-letter IATA code like YYZ.")]
     string Origin,
 
-    [Required, RegularExpression("^[A-Z]{3}$", ErrorMessage = "Use a 3-letter IATA code like PVG.")]
+    [Required, RegularExpression("^[A-Z]{3}$", ErrorMessage = "Use a 3-letter IATA code like YVR.")]
     string Destination,
 
     DateOnly DepartureDate,

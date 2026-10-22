@@ -28,16 +28,16 @@ public static class DemoDataSeeder
             };
 
         db.Bookings.AddRange(
-            Make("Wei Chen", "AC25", "YYZ", "PVG", 12, 1249.99m, BookingStatus.Ticketed),
-            Make("Mei Zhang", "AC25", "YYZ", "PVG", 12, 1249.99m, BookingStatus.Confirmed),
-            Make("Tom Ho", "AC25", "YYZ", "PVG", 12, 1249.99m, BookingStatus.Pending),
-            Make("Kevin Lau", "CX829", "YYZ", "HKG", 5, 1580.00m, BookingStatus.Confirmed),
-            Make("Ivy Tan", "CX829", "YYZ", "HKG", 19, 1620.00m, BookingStatus.Pending),
-            Make("Grace Liu", "AC7", "YVR", "PEK", 8, 1100.00m, BookingStatus.Ticketed),
-            Make("Jun Park", "AC63", "YYZ", "ICN", 26, 1350.00m, BookingStatus.Pending),
-            Make("Amy Wong", "CX889", "YVR", "HKG", 40, 1450.00m, BookingStatus.Confirmed),
-            Make("Leo Chan", "BR35", "YVR", "TPE", 15, 1190.00m, BookingStatus.Cancelled),
-            Make("Sara Lin", "AC1", "YYZ", "NRT", 33, 1399.00m, BookingStatus.Ticketed));
+            Make("user1", "WS214", "YEG", "YHZ", 12, 489.99m, BookingStatus.Ticketed),
+            Make("user2", "WS214", "YEG", "YHZ", 12, 489.99m, BookingStatus.Confirmed),
+            Make("user3", "WS214", "YEG", "YHZ", 12, 489.99m, BookingStatus.Pending),
+            Make("user4", "AC877", "YUL", "MAD", 5, 1180.00m, BookingStatus.Confirmed),
+            Make("user5", "PD452", "YOW", "YWG", 19, 312.00m, BookingStatus.Pending),
+            Make("user6", "AC1871", "YYC", "MEX", 8, 845.00m, BookingStatus.Ticketed),
+            Make("user7", "F8611", "YXE", "YLW", 26, 205.00m, BookingStatus.Pending),
+            Make("user8", "WS2702", "YQB", "CUN", 40, 960.00m, BookingStatus.Confirmed),
+            Make("user9", "AC8455", "YQR", "YXU", 15, 398.00m, BookingStatus.Cancelled),
+            Make("user10", "TS130", "YHZ", "LIS", 33, 1050.00m, BookingStatus.Ticketed));
 
         db.SaveChanges(); // the audit trigger records each new booking in BookingStatusChanges
     }

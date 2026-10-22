@@ -32,15 +32,6 @@ export interface PagedResult<T> {
   totalPages: number;
 }
 
-export interface FareQuote {
-  bookingId: number;
-  fareCad: number;
-  currency: string;
-  rate: number;
-  convertedFare: number;
-  ratesUpdatedAt: string;
-}
-
 export interface TokenResponse {
   accessToken: string;
   expiresAtUtc: string;

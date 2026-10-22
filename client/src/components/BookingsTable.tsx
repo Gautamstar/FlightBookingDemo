@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { changeStatus, getFare, type StatusAction } from "../api";
-import type { Booking, FareQuote } from "../types";
+import { changeStatus, type StatusAction } from "../api";
+import type { Booking } from "../types";
 import { money, shortDate } from "../format";
-import { Icon, Route, StatusTag } from "./Ui";
+import { Route, StatusTag } from "./Ui";
 
 interface Props {
   token: string;
   isAdmin: boolean;
   bookings: Booking[];
-  currency: string;
   selectedId: number | null;
   pressedId: number | null;
   onSelect: (id: number) => void;
@@ -31,14 +30,12 @@ export function BookingsTable({
   token,
   isAdmin,
   bookings,
-  currency,
   selectedId,
   pressedId,
   onSelect,
   onChanged,
   onError,
 }: Props) {
-  const [quotes, setQuotes] = useState<Record<number, FareQuote>>({});
   const [busyId, setBusyId] = useState<number | null>(null);
 
   async function runAction(id: number, action: StatusAction) {
@@ -48,18 +45,6 @@ export function BookingsTable({
       onChanged(id);
     } catch (err) {
       onError(err instanceof Error ? err.message : "Action failed.");
-    } finally {
-      setBusyId(null);
-    }
-  }
-
-  async function convert(id: number) {
-    setBusyId(id);
-    try {
-      const quote = await getFare(token, id, currency);
-      setQuotes((q) => ({ ...q, [id]: quote }));
-    } catch (err) {
-      onError(err instanceof Error ? err.message : "Conversion failed.");
     } finally {
       setBusyId(null);
     }
@@ -89,7 +74,6 @@ export function BookingsTable({
       </thead>
       <tbody>
         {bookings.map((b) => {
-          const quote = quotes[b.id]?.currency === currency ? quotes[b.id] : undefined;
           return (
             // key lets React match rows between renders, so it only updates the rows that changed
             <tr
@@ -125,7 +109,6 @@ export function BookingsTable({
               </td>
               <td className="num" data-label="Fare">
                 {money(b.fareCad, "CAD")}
-                {quote && <span className="converted">≈ {money(quote.convertedFare, quote.currency)}</span>}
               </td>
               <td data-label="Status">
                 <StatusTag status={b.status} fresh={pressedId === b.id} />
@@ -144,16 +127,6 @@ export function BookingsTable({
                       {LABELS[a]}
                     </button>
                   ))}
-                <button
-                  type="button"
-                  className="quiet"
-                  disabled={busyId === b.id}
-                  onClick={() => convert(b.id)}
-                  title={`Convert this fare to ${currency} with the live rates API`}
-                >
-                  <Icon name="convert" />
-                  {currency}
-                </button>
               </td>
             </tr>
           );

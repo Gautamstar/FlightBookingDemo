@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FlightBookingDemo.Models;
 
-// Bound from the query string: ?origin=YYZ&destination=PVG&date=2026-11-15&page=1&pageSize=20
+// Bound from the query string: ?origin=YYZ&destination=YVR&date=2026-11-15&page=1&pageSize=20
 // Every filter is optional; paging has safe defaults and a hard cap.
 public class BookingSearchQuery
 {

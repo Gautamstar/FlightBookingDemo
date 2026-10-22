@@ -745,14 +745,6 @@ input.num {
   width: 150px;
 }
 
-.convert-to {
-  margin-left: auto;
-}
-
-.convert-to select {
-  width: 110px;
-}
-
 .toolbar-total {
   display: grid;
   gap: 5px;
@@ -844,13 +836,6 @@ input.num {
 
 .register td.dim {
   color: var(--muted);
-}
-
-.converted {
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--teal);
 }
 
 .row-open {
@@ -1217,10 +1202,6 @@ input.num {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: "notice" "routes" "due" "expire";
   }
-
-  .convert-to {
-    margin-left: 0;
-  }
 }
 
 @media (max-width: 760px) {
@@ -1313,8 +1294,7 @@ input.num {
   .toolbar input.code,
   .toolbar input[type="date"],
   .toolbar input[type="number"],
-  .toolbar select,
-  .convert-to select {
+  .toolbar select {
     width: 100%;
   }
 

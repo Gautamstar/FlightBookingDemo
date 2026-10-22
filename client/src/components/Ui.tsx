@@ -11,7 +11,6 @@ type IconName =
   | "arrow"
   | "search"
   | "signout"
-  | "convert"
   | "close"
   | "chevron-left"
   | "chevron-right"
@@ -23,7 +22,6 @@ const ICONS: Record<IconName, React.ReactNode> = {
   arrow: <path d="M3 12h17m-5-5 5 5-5 5" />,
   search: <path d="m20 20-4.5-4.5M10.5 17a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13Z" />,
   signout: <path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14M10 16l-4-4 4-4m-4 4h11" />,
-  convert: <path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5" />,
   close: <path d="m6 6 12 12M18 6 6 18" />,
   "chevron-left": <path d="m14.5 6-6 6 6 6" />,
   "chevron-right": <path d="m9.5 6 6 6-6 6" />,

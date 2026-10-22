@@ -14,7 +14,7 @@ A small flight-booking REST API in **ASP.NET Core 8**, **Entity Framework Core**
 | PUT | `/api/bookings/{id}/confirm` | any user | Pending to Confirmed |
 | PUT | `/api/bookings/{id}/ticket` | **Admin** | Confirmed to Ticketed; 403 for agents |
 | PUT | `/api/bookings/{id}/cancel` | any user | Any active status to Cancelled |
-| GET | `/api/bookings/{id}/fare?currency=CNY` | any user | Live conversion; 503 + `Retry-After` if the rates API is down |
+| GET | `/api/bookings/{id}/fare?currency=USD` | any user | Live conversion; 503 + `Retry-After` if the rates API is down |
 | GET | `/api/operations/route-summary?from=&to=` | any user | Route revenue report from the view `vw_RouteSummary` |
 | GET | `/api/operations/unticketed?days=30` | any user | Bookings still needing a ticket, from the function `fn_UnticketedDepartures` |
 | POST | `/api/operations/expire-unpaid?olderThanHours=24` | **Admin** | Runs the stored procedure `usp_ExpireUnpaidBookings` |
@@ -24,7 +24,7 @@ Errors use the standard `ProblemDetails` JSON format (RFC 9110).
 
 ## Screenshots
 
-Agent view, with one fare converted to CNY through the live exchange-rate API and a booking's status history (written by the SQL Server trigger) open on the right:
+Agent view, with a booking's status history (written by the SQL Server trigger) open on the right. Fares are shown in CAD; the live conversion endpoint is in Swagger:
 
 ![Bookings, agent view](docs/screenshots/bookings-agent.png)
 
