@@ -19,4 +19,7 @@ public interface IBookingService
 
     // The booking's fare converted with live exchange rates.
     Task<ServiceResult<FareQuote>> GetFareQuoteAsync(int id, string currency, CancellationToken ct);
+
+    // Passenger self-service: the booking only comes back when the reference and the name both match.
+    Task<ServiceResult<TripLookupResult>> LookupTripAsync(int reference, string passengerName, CancellationToken ct);
 }

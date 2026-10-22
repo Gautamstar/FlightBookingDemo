@@ -48,7 +48,7 @@ export function Route({ from, to, size = "md" }: { from: string; to: string; siz
   );
 }
 
-export function Wordmark() {
+export function Wordmark({ subline = "Agency console" }: { subline?: string }) {
   return (
     <span className="wordmark">
       <span className="wordmark-mark" aria-hidden="true">
@@ -56,7 +56,7 @@ export function Wordmark() {
       </span>
       <span className="wordmark-text">
         Flight Bookings
-        <small>Agency console</small>
+        <small>{subline}</small>
       </span>
     </span>
   );

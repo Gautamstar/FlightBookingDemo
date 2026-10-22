@@ -71,3 +71,15 @@ export interface Session {
   username: string;
   role: string;
 }
+
+// What the public lookup returns: enough for a traveller, without fares or who changed what.
+export interface Trip {
+  reference: number;
+  passengerName: string;
+  flightNumber: string;
+  origin: string;
+  destination: string;
+  departureDate: string;
+  status: BookingStatus;
+  history: { status: BookingStatus; changedAt: string }[];
+}

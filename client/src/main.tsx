@@ -7,9 +7,11 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import './index.css'
 import App from './App.tsx'
+import { CustomerSite } from './components/CustomerSite.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    {/* Two sites from one bundle: travellers at /, the agency console at /agent. */}
+    {window.location.pathname.startsWith('/agent') ? <App /> : <CustomerSite />}
   </StrictMode>,
 )

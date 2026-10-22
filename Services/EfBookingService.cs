@@ -176,4 +176,44 @@ public class EfBookingService : IBookingService
         return ServiceResult<FareQuote>.Ok(
             new FareQuote(booking.Id, booking.FareCad, currency, rate, converted, rates.UpdatedAt));
     }
+
+    public async Task<ServiceResult<TripLookupResult>> LookupTripAsync(int reference, string passengerName, CancellationToken ct)
+    {
+        // Project only the columns the passenger may see, so the fare never even leaves the database.
+        var booking = await _db.Bookings.AsNoTracking()
+            .Where(b => b.Id == reference)
+            .Select(b => new { b.Id, b.PassengerName, b.FlightNumber, b.Origin, b.Destination, b.DepartureDate, b.Status })
+            .FirstOrDefaultAsync(ct);
+
+        // The name check runs here rather than in SQL so the match rule (trimmed, case-insensitive)
+        // doesn't depend on the database collation. Missing booking and wrong name are the same
+        // NotFound, so a caller can't use this endpoint to discover which booking numbers exist.
+        if (booking is null ||
+            !string.Equals(booking.PassengerName.Trim(), passengerName.Trim(), StringComparison.OrdinalIgnoreCase))
+        {
+            return ServiceResult<TripLookupResult>.NotFound();
+        }
+
+        var history = await _db.StatusChanges.AsNoTracking()
+            .Where(h => h.BookingId == booking.Id)
+            .OrderBy(h => h.ChangedAt).ThenBy(h => h.Id) // oldest first; Id breaks ties within one statement
+            .Select(h => new { h.NewStatus, h.ChangedAt })
+            .ToListAsync(ct);
+
+        // datetime2 comes back with Kind=Unspecified. Marking it UTC makes the JSON carry a "Z",
+        // so the browser doesn't read it as local time.
+        var events = history
+            .Select(h => new TripStatusEvent(h.NewStatus, DateTime.SpecifyKind(h.ChangedAt, DateTimeKind.Utc)))
+            .ToList();
+
+        return ServiceResult<TripLookupResult>.Ok(new TripLookupResult(
+            booking.Id,
+            booking.PassengerName,
+            booking.FlightNumber,
+            booking.Origin,
+            booking.Destination,
+            booking.DepartureDate,
+            booking.Status,
+            events));
+    }
 }

@@ -84,7 +84,12 @@ export default function App() {
     <div className="shell">
       <div className="utility">
         <div className="utility-inner">
-          <span>Flight booking API demo · ASP.NET Core, SQL Server, React</span>
+          <span>
+            Agency console · ASP.NET Core, SQL Server, React
+            <a className="utility-link" href="/">
+              Customer site
+            </a>
+          </span>
           {session && (
             <span className="utility-user">
               <Icon name="user" />

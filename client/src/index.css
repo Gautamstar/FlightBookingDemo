@@ -1,32 +1,32 @@
-/* Flight Bookings: an agency console in a classic travel-agency web language.
-   White and warm-grey bands, a teal utility bar, Nunito headings, square panels,
-   and uppercase teal-blue buttons with a chevron segment. */
+/* Flight Bookings: a white and blue travel site with an agency console behind it.
+   White and pale-blue bands, a navy utility bar, Nunito headings, square panels,
+   and uppercase blue buttons with a chevron segment. */
 
 :root {
   --white: #ffffff;
-  --grey-band: #f2efef;
-  --grey-soft: #f6f6f6;
-  --line: #e5e5e5;
-  --line-strong: #d2d3d4;
+  --grey-band: #f2f6fb;
+  --grey-soft: #f6f8fb;
+  --line: #e1e7ef;
+  --line-strong: #c9d3e0;
 
-  --heading: #444444;
-  --text: #5c5c5c;
-  --muted: #6e6e6e;
+  --heading: #1f2d42;
+  --text: #4a5568;
+  --muted: #5f6b7d;
 
-  --teal: #006564;
-  --teal-dark: #004e4d;
-  --teal-wash: #e3efee;
-  --red: #ae2930;
-  --red-wash: #f8e6e7;
-  --blue: #0f748f;
-  --blue-dark: #0b5a6f;
+  --brand: #0b3d78;
+  --brand-dark: #082d59;
+  --brand-wash: #e8f0fa;
+  --red: #b3261e;
+  --red-wash: #fbe9e7;
+  --blue: #1663c7;
+  --blue-dark: #104c9b;
 
-  --pending: #8a6a12;
-  --pending-wash: #fbf3dc;
-  --confirmed: #006564;
-  --confirmed-wash: #e3efee;
-  --ticketed: #0f748f;
-  --ticketed-wash: #e2f0f4;
+  --pending: #8a5a00;
+  --pending-wash: #fdf2dc;
+  --confirmed: #0b3d78;
+  --confirmed-wash: #e8f0fa;
+  --ticketed: #1663c7;
+  --ticketed-wash: #e3eefc;
   --cancelled: #ae2930;
   --cancelled-wash: #f8e6e7;
 
@@ -37,7 +37,7 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
   color-scheme: light;
-  accent-color: var(--teal);
+  accent-color: var(--brand);
 }
 
 *,
@@ -58,12 +58,12 @@ body {
   font-size: 15px;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
-  caret-color: var(--teal);
+  caret-color: var(--brand);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--teal-wash);
+  background: var(--brand-wash);
   color: var(--heading);
 }
 
@@ -85,7 +85,7 @@ code {
 }
 
 :focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
 
@@ -122,7 +122,7 @@ code {
 /* ---------- Utility bar, header, footer ---------- */
 
 .utility {
-  background: var(--teal);
+  background: var(--brand);
   color: var(--white);
   font-size: 12px;
 }
@@ -197,7 +197,7 @@ code {
   width: 44px;
   height: 44px;
   color: var(--white);
-  background: var(--teal);
+  background: var(--brand);
   border-radius: 50%;
 }
 
@@ -214,7 +214,7 @@ code {
   font-size: 22px;
   font-weight: 800;
   line-height: 1.1;
-  color: var(--teal);
+  color: var(--brand);
   letter-spacing: 0.01em;
 }
 
@@ -231,35 +231,41 @@ code {
   gap: 36px;
 }
 
-.menu button {
+.menu button,
+.menu a {
   position: relative;
   padding: 8px 0;
   font-family: var(--display);
   font-size: 17px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #666666;
+  color: #5f6b7d;
+  white-space: nowrap;
+  text-decoration: none;
   background: none;
   border: 0;
   transition: color 120ms ease-out;
 }
 
-.menu button:hover {
-  color: var(--teal);
+.menu button:hover,
+.menu a:hover {
+  color: var(--brand);
 }
 
-.menu button[aria-current="page"] {
-  color: var(--red);
+.menu button[aria-current="page"],
+.menu a[aria-current="page"] {
+  color: var(--blue);
 }
 
-.menu button[aria-current="page"]::after {
+.menu button[aria-current="page"]::after,
+.menu a[aria-current="page"]::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: var(--red);
+  background: var(--blue);
 }
 
 .footer {
@@ -301,7 +307,7 @@ code {
   font-weight: 300;
   line-height: 1.2;
   text-align: center;
-  color: var(--teal);
+  color: var(--brand);
 }
 
 .band-lead {
@@ -428,14 +434,14 @@ button {
 }
 
 .outline {
-  color: var(--teal);
+  color: var(--brand);
   background: var(--white);
-  border: 1px solid var(--teal);
+  border: 1px solid var(--brand);
 }
 
 .outline:hover:not(:disabled) {
   color: var(--white);
-  background: var(--teal);
+  background: var(--brand);
 }
 
 .quiet {
@@ -522,9 +528,9 @@ select:hover {
 
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--brand);
   outline-offset: 0;
-  border-color: var(--teal);
+  border-color: var(--brand);
 }
 
 input::placeholder {
@@ -656,7 +662,7 @@ input.num {
 .route .icon {
   width: 14px;
   height: 14px;
-  color: var(--teal);
+  color: var(--brand);
 }
 
 .route-lg {
@@ -757,7 +763,7 @@ input.num {
   font-size: 22px;
   font-weight: 800;
   line-height: 40px;
-  color: var(--teal);
+  color: var(--brand);
 }
 
 .register-wrap {
@@ -821,7 +827,7 @@ input.num {
 }
 
 .register tbody tr.is-selected {
-  background: var(--teal-wash);
+  background: var(--brand-wash);
 }
 
 .register .date,
@@ -849,7 +855,7 @@ input.num {
 }
 
 .row-open:hover {
-  color: var(--teal);
+  color: var(--brand);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -993,8 +999,8 @@ input.num {
 }
 
 .timeline li.is-latest .timeline-dot {
-  border-color: var(--teal);
-  background: var(--teal);
+  border-color: var(--brand);
+  background: var(--brand);
 }
 
 .timeline li > div {
@@ -1077,8 +1083,8 @@ input.num {
   min-height: 40px;
   padding: 0 12px;
   font-size: 14px;
-  color: var(--teal);
-  background: var(--teal-wash);
+  color: var(--brand);
+  background: var(--brand-wash);
 }
 
 .result strong {
@@ -1114,7 +1120,7 @@ input.num {
   display: grid;
   justify-items: start;
   line-height: 1;
-  color: var(--teal);
+  color: var(--brand);
 }
 
 .due.is-soon {
@@ -1257,7 +1263,8 @@ input.num {
     gap: 14px;
   }
 
-  .menu button {
+  .menu button,
+  .menu a {
     font-size: 14px;
     letter-spacing: 0.3px;
   }
@@ -1478,5 +1485,210 @@ input.num {
 @media (max-width: 760px) {
   .bookings-layout.has-detail .register td:nth-child(4) {
     display: block;
+  }
+}
+
+/* ---------- Customer site ---------- */
+
+.wordmark-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.utility-inner > .utility-link {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.hero {
+  padding: 64px 30px 72px;
+  color: var(--white);
+  background: var(--brand);
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  align-items: center;
+  gap: 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(34px, 4vw, 50px);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--white);
+}
+
+.hero-copy p {
+  max-width: 44ch;
+  margin: 14px 0 0;
+  font-size: 17px;
+  color: rgb(255 255 255 / 0.84);
+}
+
+.lookup {
+  display: grid;
+  gap: 14px;
+  padding: 26px;
+  color: var(--text);
+  border: 0;
+}
+
+.lookup-title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.lookup .notice,
+.lookup .hint {
+  margin: 0;
+}
+
+.lookup .hint {
+  font-size: 12px;
+}
+
+.trip-band {
+  padding-top: 40px;
+  padding-bottom: 44px;
+}
+
+.band > .trip {
+  max-width: 780px;
+}
+
+.trip-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.trip-ref {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.trip-meaning {
+  padding: 16px 24px;
+  border-left: 4px solid var(--confirmed);
+  background: var(--confirmed-wash);
+}
+
+.trip-meaning.is-pending {
+  border-left-color: var(--pending);
+  background: var(--pending-wash);
+}
+
+.trip-meaning.is-ticketed {
+  border-left-color: var(--ticketed);
+  background: var(--ticketed-wash);
+}
+
+.trip-meaning.is-cancelled {
+  border-left-color: var(--cancelled);
+  background: var(--cancelled-wash);
+}
+
+.trip-meaning h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.trip-meaning p {
+  margin: 4px 0 0;
+}
+
+.trip-facts {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 0;
+}
+
+.trip-facts > div,
+.trip-facts > div:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+
+.trip-facts > div:last-child {
+  border-right: 0;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 12px;
+  padding: 24px;
+}
+
+.step-number {
+  font-family: var(--display);
+  font-size: 38px;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--blue);
+}
+
+.step p {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .hero-inner,
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding: 40px 16px 48px;
+  }
+
+  .lookup {
+    padding: 20px;
+  }
+
+  .trip-head,
+  .trip-meaning {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .trip-facts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .trip-facts > div:nth-child(2) {
+    border-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* The section link is a scroll shortcut; the phone header keeps only the main one. */
+  .menu a[href="#how"] {
+    display: none;
   }
 }

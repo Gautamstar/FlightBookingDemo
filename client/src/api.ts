@@ -7,6 +7,7 @@ import type {
   Session,
   StatusChange,
   TokenResponse,
+  Trip,
 } from "./types";
 
 // The API's address comes from the environment (.env files), so dev, test and prod can differ.
@@ -109,4 +110,9 @@ export function expireUnpaid(token: string, olderThanHours: number): Promise<{ e
 
 export function getHistory(token: string, id: number): Promise<StatusChange[]> {
   return request(`/api/operations/bookings/${id}/history`, token);
+}
+
+// Public: no token. The API rate limits this and gives one answer for any mismatch.
+export function lookupTrip(reference: number, name: string): Promise<Trip> {
+  return request(`/api/trips/lookup?reference=${reference}&name=${encodeURIComponent(name)}`, null);
 }

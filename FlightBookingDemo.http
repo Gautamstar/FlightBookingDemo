@@ -4,3 +4,9 @@ GET {{FlightBookingDemo_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Anonymous trip lookup (no token). Over 10 calls a minute from one IP returns 429 + Retry-After.
+GET {{FlightBookingDemo_HostAddress}}/api/trips/lookup?reference=1&name=user1
+Accept: application/json
+
+###

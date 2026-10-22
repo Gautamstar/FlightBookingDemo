@@ -19,10 +19,15 @@ A small flight-booking REST API in **ASP.NET Core 8**, **Entity Framework Core**
 | GET | `/api/operations/unticketed?days=30` | any user | Bookings still needing a ticket, from the function `fn_UnticketedDepartures` |
 | POST | `/api/operations/expire-unpaid?olderThanHours=24` | **Admin** | Runs the stored procedure `usp_ExpireUnpaidBookings` |
 | GET | `/api/operations/bookings/{id}/history` | any user | Status history written by the trigger `trg_Bookings_StatusHistory` |
+| GET | `/api/trips/lookup?reference=&name=` | anonymous, 10/min per IP | Passenger self-service: booking summary plus status history; one 404 for any mismatch; 429 + `Retry-After` over the limit |
 
 Errors use the standard `ProblemDetails` JSON format (RFC 9110).
 
 ## Screenshots
+
+Customer site: a traveller looks up their own booking with the booking number and name. The lookup endpoint is anonymous, rate limited, and gives the same answer for a wrong number or a wrong name:
+
+![Customer booking lookup](docs/screenshots/customer.png)
 
 Agent view, with a booking's status history (written by the SQL Server trigger) open on the right. Fares are shown in CAD; the live conversion endpoint is in Swagger:
 
@@ -75,7 +80,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. It calls the API at `http://localhost:5130` (override with `VITE_API_URL` in `client/.env.development.local`). The API allows this origin through the `Cors:AllowedOrigins` setting.
+Open http://localhost:5173 for the customer site and http://localhost:5173/agent for the agency console. It calls the API at `http://localhost:5130` (override with `VITE_API_URL` in `client/.env.development.local`). The API allows this origin through the `Cors:AllowedOrigins` setting.
 
 ## Design choices
 
