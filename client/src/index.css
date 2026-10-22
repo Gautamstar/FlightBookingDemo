@@ -1692,3 +1692,367 @@ input.num {
     display: none;
   }
 }
+
+/* ---------- Behind the scenes panel (development only) ---------- */
+
+.backstage {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: 440px;
+  max-width: 100vw;
+  color: #d7e0ec;
+  background: #0d1b2e;
+  border-left: 1px solid #1f3350;
+  box-shadow: -8px 0 24px rgb(5 15 30 / 0.25);
+  animation: backstage-in 220ms var(--ease-out);
+}
+
+@keyframes backstage-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+
+.shell.has-backstage {
+  padding-right: 440px;
+}
+
+.backstage-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 12px;
+}
+
+.backstage-head h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.backstage-head p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #8fa3bf;
+}
+
+.backstage .icon-button {
+  color: #c4d1e3;
+}
+
+.backstage-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px;
+  border-bottom: 1px solid #1f3350;
+}
+
+.backstage-tabs button {
+  padding: 9px 12px;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  color: #8fa3bf;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+}
+
+.backstage-tabs button[aria-selected="true"] {
+  color: var(--white);
+  border-bottom-color: #5b9cff;
+}
+
+.backstage-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 20px 24px;
+}
+
+.backstage-notice {
+  margin: 12px 20px 0;
+}
+
+.backstage-empty {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #8fa3bf;
+}
+
+.backstage-clear {
+  float: right;
+  color: #8fa3bf;
+}
+
+.feed {
+  clear: both;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 6px 0 0;
+  list-style: none;
+}
+
+.feed-item {
+  min-width: 0;
+  padding: 12px;
+  background: #12243b;
+  border: 1px solid #1f3350;
+  animation: backstage-in 200ms var(--ease-out);
+}
+
+.feed-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.verb {
+  flex: none;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #0d1b2e;
+  background: #7fb2ff;
+}
+
+.verb-post {
+  background: #6fd3a0;
+}
+
+.verb-put,
+.verb-patch {
+  background: #f2c36b;
+}
+
+.verb-delete {
+  background: #f28b82;
+}
+
+.feed-path {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--white);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: none;
+}
+
+.code-chip {
+  flex: none;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.code-chip.is-2xx {
+  color: #6fd3a0;
+  border: 1px solid #2f6b50;
+}
+
+.code-chip.is-4xx {
+  color: #f2c36b;
+  border: 1px solid #7a6230;
+}
+
+.code-chip.is-5xx {
+  color: #f28b82;
+  border: 1px solid #7a3a35;
+}
+
+.feed-meta {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #8fa3bf;
+}
+
+.feed-sql {
+  margin-top: 8px;
+  border-left: 2px solid #5b9cff;
+  background: #0d1b2e;
+}
+
+.feed-sql-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 9px 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7fb2ff;
+}
+
+.feed-sql pre {
+  max-height: 150px;
+  margin: 0;
+  padding: 5px 9px 8px;
+  overflow: auto;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #d7e0ec;
+  white-space: pre-wrap;
+}
+
+.feed-note {
+  margin: 6px 0 0;
+  padding: 0 9px 8px;
+  font-size: 11px;
+  color: #f2c36b;
+}
+
+.feed-item > .feed-note {
+  padding: 0;
+}
+
+.feed-note code,
+.db-hint code {
+  color: inherit;
+  background: none;
+}
+
+.feed-external {
+  display: grid;
+  gap: 2px;
+  margin-top: 8px;
+  padding: 6px 9px;
+  font-size: 11px;
+  color: #c4d1e3;
+  border-left: 2px solid #6fd3a0;
+  background: #0d1b2e;
+}
+
+.feed-external span:first-child {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6fd3a0;
+}
+
+.feed-external code {
+  overflow-wrap: anywhere;
+  color: var(--white);
+  background: none;
+}
+
+.db-title {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0 6px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  color: var(--white);
+}
+
+.db-title span {
+  font-family: var(--body);
+  font-size: 11px;
+  font-weight: 400;
+  color: #8fa3bf;
+}
+
+.db-hint {
+  margin: 0 0 8px;
+  font-size: 11px;
+  color: #8fa3bf;
+}
+
+.db-wrap {
+  margin-bottom: 14px;
+  overflow-x: auto;
+  border: 1px solid #1f3350;
+}
+
+.db-table {
+  width: 100%;
+  font-size: 11px;
+  border-collapse: collapse;
+}
+
+.db-table th,
+.db-table td {
+  padding: 5px 7px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid #1f3350;
+}
+
+.db-table th {
+  font-weight: 700;
+  color: #7fb2ff;
+  background: #12243b;
+}
+
+.db-table td.num,
+.db-table th.num {
+  text-align: right;
+}
+
+@media (max-width: 1100px) {
+  /* Narrow screens: the panel floats over the page instead of pushing it aside. */
+  .shell.has-backstage {
+    padding-right: 0;
+  }
+}
+
+/* Inside the dark panel, code is plain text on the dark background. */
+.backstage code {
+  padding: 0;
+  font-size: inherit;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.backstage .feed-path {
+  font-size: 12px;
+}
+
+/* The page's breakpoints follow the window, but an open panel takes 440px of it. These repeat the
+   narrower layouts for the space that is actually left. */
+@media (max-width: 1620px) {
+  .shell.has-backstage .bookings-layout.has-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shell.has-backstage .detail {
+    position: static;
+  }
+
+  .shell.has-backstage .issue-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .shell.has-backstage .issue-grid .wide {
+    grid-column: span 3;
+  }
+
+  .shell.has-backstage .issue-submit {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 1440px) {
+  .shell.has-backstage .operations {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "notice" "routes" "due" "expire";
+  }
+}

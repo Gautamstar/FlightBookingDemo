@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { ApiError, searchBookings } from "./api";
+import { BackstagePanel } from "./components/BackstagePanel";
 import { BookingDetail } from "./components/BookingDetail";
 import { BookingsTable } from "./components/BookingsTable";
 import { CreateBookingForm } from "./components/CreateBookingForm";
@@ -26,6 +27,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [freshId, setFreshId] = useState<number | null>(null); // the row whose status just changed
   const [historyVersion, setHistoryVersion] = useState(0);
+  const [backstage, setBackstage] = useState(false);
 
   // useCallback keeps the same function between renders unless session or filters change,
   // so the effect below only re-runs when there's actually something new to load.
@@ -74,6 +76,7 @@ export default function App() {
   function signOut() {
     setSession(null);
     setSelectedId(null);
+    setBackstage(false);
     setView("bookings");
   }
 
@@ -81,7 +84,7 @@ export default function App() {
   const selected = bookings.find((b) => b.id === selectedId) ?? null;
 
   return (
-    <div className="shell">
+    <div className={`shell${backstage && session ? " has-backstage" : ""}`}>
       <div className="utility">
         <div className="utility-inner">
           <span>
@@ -94,6 +97,14 @@ export default function App() {
             <span className="utility-user">
               <Icon name="user" />
               {session.username} · {session.role}
+              <button
+                type="button"
+                className="utility-link"
+                aria-pressed={backstage}
+                onClick={() => setBackstage((open) => !open)}
+              >
+                {backstage ? "Hide behind the scenes" : "Behind the scenes"}
+              </button>
               <button type="button" className="utility-link" onClick={signOut}>
                 Sign out
               </button>
@@ -260,6 +271,8 @@ export default function App() {
           </section>
         </main>
       )}
+
+      {session && backstage && <BackstagePanel token={session.token} onClose={() => setBackstage(false)} />}
 
       <footer className="footer">
         <div className="footer-inner">

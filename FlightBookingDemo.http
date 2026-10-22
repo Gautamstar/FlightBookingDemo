@@ -10,3 +10,19 @@ GET {{FlightBookingDemo_HostAddress}}/api/trips/lookup?reference=1&name=user1
 Accept: application/json
 
 ###
+
+# Dev only: paste an accessToken from POST /api/auth/login. Returns /api requests newer than seq "after",
+# each with the SQL it ran and any exchange-rate calls it made.
+@token = paste-access-token-here
+GET {{FlightBookingDemo_HostAddress}}/api/dev/activity?after=0
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+# Dev only: latest 15 rows (and totals) of Bookings and BookingStatusChanges.
+GET {{FlightBookingDemo_HostAddress}}/api/dev/tables
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###

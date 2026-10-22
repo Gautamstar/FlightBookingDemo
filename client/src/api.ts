@@ -1,6 +1,8 @@
 import type {
+  ActivityEntry,
   Booking,
   CreateBookingRequest,
+  DbTables,
   PagedResult,
   RouteSummary,
   SearchFilters,
@@ -115,4 +117,13 @@ export function getHistory(token: string, id: number): Promise<StatusChange[]> {
 // Public: no token. The API rate limits this and gives one answer for any mismatch.
 export function lookupTrip(reference: number, name: string): Promise<Trip> {
   return request(`/api/trips/lookup?reference=${reference}&name=${encodeURIComponent(name)}`, null);
+}
+
+// Development-only views of the backend, for the "Behind the scenes" panel.
+export function getActivity(token: string, after: number): Promise<ActivityEntry[]> {
+  return request(`/api/dev/activity?after=${after}`, token);
+}
+
+export function getTables(token: string): Promise<DbTables> {
+  return request("/api/dev/tables", token);
 }

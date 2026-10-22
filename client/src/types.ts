@@ -83,3 +83,44 @@ export interface Trip {
   status: BookingStatus;
   history: { status: BookingStatus; changedAt: string }[];
 }
+
+// Development-only feed from /api/dev: one entry per API request, with the SQL it ran.
+export interface ActivityEntry {
+  seq: number;
+  at: string;
+  method: string;
+  path: string;
+  status: number;
+  durationMs: number;
+  user: string | null;
+  sql: { text: string; durationMs: number }[];
+  external: { method: string; url: string; status: number | null; durationMs: number }[];
+}
+
+export interface DbTables {
+  bookings: {
+    total: number;
+    rows: {
+      id: number;
+      passengerName: string;
+      flightNumber: string;
+      origin: string;
+      destination: string;
+      departureDate: string;
+      fareCad: number;
+      status: BookingStatus;
+      createdAt: string;
+    }[];
+  };
+  statusChanges: {
+    total: number;
+    rows: {
+      id: number;
+      bookingId: number;
+      oldStatus: BookingStatus | null;
+      newStatus: BookingStatus;
+      changedAt: string;
+      changedBy: string;
+    }[];
+  };
+}

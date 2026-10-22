@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using FlightBookingDemo.Auth;
 using FlightBookingDemo.Controllers;
 using FlightBookingDemo.Data;
+using FlightBookingDemo.Diagnostics;
 using FlightBookingDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -44,17 +45,38 @@ builder.Services.AddSwaggerGen(o =>
     });
 });
 
+// Demo/debug "behind the scenes" feed (Diagnostics/). Development only, so production never pays
+// for the capture and never exposes SQL text or other users' requests.
+var devFeed = builder.Environment.IsDevelopment();
+if (devFeed)
+{
+    builder.Services.AddHttpContextAccessor(); // lets singletons find the current request
+    builder.Services.AddSingleton<ActivityFeed>();
+    builder.Services.AddSingleton<SqlCaptureInterceptor>();
+    builder.Services.AddTransient<ExternalCallCaptureHandler>();
+}
+
 // AddDbContext registers AppDbContext as scoped (one per request).
-builder.Services.AddDbContext<AppDbContext>(o =>
-    o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddDbContext<AppDbContext>((sp, o) =>
+{
+    o.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+    if (devFeed)
+    {
+        o.AddInterceptors(sp.GetRequiredService<SqlCaptureInterceptor>());
+    }
+});
 
 // Typed HttpClient for the exchange-rate API. IHttpClientFactory pools the connections underneath.
 builder.Services.AddMemoryCache();
-builder.Services.AddHttpClient<ExchangeRateClient>(c =>
+var ratesClient = builder.Services.AddHttpClient<ExchangeRateClient>(c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ExchangeRates:BaseUrl"]!);
     c.Timeout = TimeSpan.FromSeconds(5); // never wait forever on a third party
 });
+if (devFeed)
+{
+    ratesClient.AddHttpMessageHandler<ExternalCallCaptureHandler>();
+}
 
 // Scoped to match the DbContext it depends on. Swapping storage is this one line.
 builder.Services.AddScoped<IBookingService, EfBookingService>();
@@ -154,6 +176,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Early in the pipeline, so the recorded duration and status include CORS, rate limiting and auth.
+if (devFeed)
+{
+    app.UseMiddleware<ActivityMiddleware>();
+}
+
 // Picks the endpoint for the request. Called explicitly so the middleware below can see which
 // endpoint (and which [EnableRateLimiting] policy) it is about to run.
 app.UseRouting();
@@ -171,5 +199,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// GET /api/dev/activity and /api/dev/tables: a demo/debug feature for the client's backstage panel.
+// Mapped only in Development, so in production the routes don't exist at all. They return SQL
+// text and every user's recent requests, which no production API should hand out.
+if (app.Environment.IsDevelopment())
+{
+    app.MapDevEndpoints();
+}
 
 app.Run();
